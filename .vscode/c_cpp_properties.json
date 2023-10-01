@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/src/**",
                 "X:/python_env/include" // 在这里指定特定python版本的include文件夹的完整路径，方便写代码时的语法检查。此操作不影响编译选择的python版本
             ],
             "defines": [

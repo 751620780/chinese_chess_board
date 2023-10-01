@@ -8,4 +8,5 @@
 *.pprof
 *.test
 /build
+/build_msvc
 __debug_bin

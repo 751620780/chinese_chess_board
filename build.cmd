@@ -3,7 +3,7 @@ CALL C:\ProgramData\anaconda3\Scripts\activate.bat X:/python_env
 mkdir build
 cd build
 cmake ..
-cmake --build . --target hello_world --config Release
+cmake --build . --target chess_board --config Release
 cd  Release
 for /r %%a in (*.pyd) do copy %%a "./../../"
 cd ../..
