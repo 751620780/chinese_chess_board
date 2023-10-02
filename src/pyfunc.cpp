@@ -75,28 +75,31 @@ void init_env()
 	Position::init();
 }
 
-vector<string> cal_move_actions(string fen)
+vector<string> cal_move_actions(string fen_cmd)
 {
 	Position pos;
 	Move m;
-	string token, cmd;
-	istringstream is(fen);
+	string token, fen;
+	istringstream is(fen_cmd);
 	StateListPtr states = StateListPtr(new deque<StateInfo>(1));
 
 	is >> token;
 
 	if (token == "startpos")
 	{
-		cmd = StartFEN;
+		fen = StartFEN;
 		is >> token; // Consume the "moves" token, if any
 	}
 	else if (token == "fen")
 		while (is >> token && token != "moves")
-			cmd += token + " ";
+			fen += token + " ";
 	else
-		return vector<string>();
+	{
+		fen = fen_cmd;
+		is.str("");
+	}
 
-	pos.set(cmd, &states->back());
+	pos.set(fen, &states->back());
 
 	// Parse the move list, if any
 	while (is >> token && (m = to_move(pos, token)) != MOVE_NONE)
@@ -107,28 +110,31 @@ vector<string> cal_move_actions(string fen)
 	return get_moves(pos);
 }
 
-string do_move(string fen, string move)
+string do_move(string fen_cmd, string move)
 {
 	Position pos;
 	Move m;
-	string token, cmd;
-	istringstream is(fen);
+	string token, fen;
+	istringstream is(fen_cmd);
 	StateListPtr states = StateListPtr(new deque<StateInfo>(1));
 
 	is >> token;
 
 	if (token == "startpos")
 	{
-		cmd = StartFEN;
+		fen = StartFEN;
 		is >> token;
 	}
 	else if (token == "fen")
 		while (is >> token && token != "moves")
-			cmd += token + " ";
+			fen += token + " ";
 	else
-		return "";
+	{
+		fen = fen_cmd;
+		is.str("");
+	}
 
-	pos.set(cmd, &states->back());
+	pos.set(fen, &states->back());
 
 	while (is >> token && (m = to_move(pos, token)) != MOVE_NONE)
 	{
@@ -144,11 +150,11 @@ string do_move(string fen, string move)
 	return pos.fen();
 }
 
-ChessBoard::ChessBoard(const string &fen)
+ChessBoard::ChessBoard(const string &fen_cmd)
 {
 	Move m;
-	string token, fen_str;
-	istringstream is(fen);
+	string token, fen;
+	istringstream is(fen_cmd);
 	ppos = (void*)new Position();
 	pstates = (void*)new StateListPtr(new deque<StateInfo>(1));
 
@@ -157,15 +163,15 @@ ChessBoard::ChessBoard(const string &fen)
 	if (token == "fen")
 	{
 		while (is >> token && token != "moves")
-			fen_str += token + " ";
+			fen += token + " ";
 	}
 	else
 	{
-		fen_str = fen;
+		fen = fen_cmd;
 		is.str("");
 	}
 
-	((Position*)ppos)->set(fen_str, &((*(StateListPtr*)pstates)->back()));
+	((Position*)ppos)->set(fen, &((*(StateListPtr*)pstates)->back()));
 
 	// Parse the move list, if any
 	while (is >> token && (m = to_move(*((Position*)ppos), token)) != MOVE_NONE)
@@ -182,10 +188,8 @@ vector<string> ChessBoard::all_legal_moves()
 
 bool ChessBoard::do_move(string &action)
 {
-	Move m;
-	delete (StateListPtr*)pstates;
-	pstates = (void*) new StateListPtr(new deque<StateInfo>(1));
-	if ((m = to_move(*(Position*)ppos, action)) != MOVE_NONE)
+	Move m = to_move(*(Position*)ppos, action);
+	if (m != MOVE_NONE)
 	{
 		(*(StateListPtr*)pstates)->emplace_back();
 		((Position*)ppos)->do_move(m, (*(StateListPtr*)pstates)->back());

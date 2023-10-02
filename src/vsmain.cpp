@@ -20,12 +20,12 @@
 
 
 void test() {
-	std::string fen[] = {
-		"fen 1rbakab1r/9/6n2/p1N4cp/2n1P1pC1/PcP6/1C4P1P/6N2/9/R1BAKAB1R w - - 0 1",      
-		"fen 4kr3/4a4/9/p7p/4P1b2/3rC2c1/2P1CN2P/4B4/4A4/3AK1B2 b - - 0 1",             
-		"fen 4k3r/4a4/b2aN4/5c2p/pr2PCb2/P1B3P2/2n3C1P/5AN1R/2R6/4K1B2 b - - 0 1",      
-		"fen 4k4/2r6/b2aNa3/4c1P1p/6b2/P1B3B2/2nRC1R1P/2prCA3/5N3/4K4 w - - 0 1",       
-		"fen r1bakab2/9/1c2c3r/pC2n1p1p/2p6/5n3/P1P1P1P1P/BN4N1B/9/R2AKA1R1 b - - 0 9",
+	std::string fen_i[] = {
+		"1rbakab1r/9/6n2/p1N4cp/2n1P1pC1/PcP6/1C4P1P/6N2/9/R1BAKAB1R w - - 0 1",      
+		"4kr3/4a4/9/p7p/4P1b2/3rC2c1/2P1CN2P/4B4/4A4/3AK1B2 b - - 0 1",             
+		"4k3r/4a4/b2aN4/5c2p/pr2PCb2/P1B3P2/2n3C1P/5AN1R/2R6/4K1B2 b - - 0 1",      
+		"4k4/2r6/b2aNa3/4c1P1p/6b2/P1B3B2/2nRC1R1P/2prCA3/5N3/4K4 w - - 0 1",       
+		"r1bakab2/9/1c2c3r/pC2n1p1p/2p6/5n3/P1P1P1P1P/BN4N1B/9/R2AKA1R1 b - - 0 9",
 
 	};
 
@@ -44,11 +44,11 @@ void test() {
 		"4k4/2r6/b2aNa3/4C1P1p/6b2/P1B3B2/2nRC1R1P/2pr1A3/5N3/4K4 b - - 0 1",
 		"r1bakab2/9/1c2c3r/pC2n1p1p/2p6/9/P1P1P1P1P/BN2n1N1B/9/R2AKA1R1 w - - 1 10",
 	};
-	int len = sizeof(fen) / sizeof(fen[0]);
+	int len = sizeof(fen_i) / sizeof(fen_i[0]);
 
-	for (int i = 0; i < 150000; i++)
+	for (int i = 0; i < 15000; i++)
 	{
-		ChessBoard cb(fen[i % len]);
+		ChessBoard cb(fen_i[i % len]);
 		auto res = cb.do_move(move[i%len]);
 		if (cb.fen() != fen_o[i % len] || !res)
 		{
@@ -62,7 +62,7 @@ int thread_safty_test()
 { 
 	auto start = std::chrono::high_resolution_clock::now();
 	std::vector<std::thread> threads;
-	for (int i = 0; i < 16; ++i) {
+	for (int i = 0; i < 10; ++i) {
 		threads.emplace_back(test);
 	}
 	for (auto& thread : threads) {
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 {
 
 	init_env();
-	//thread_safty_test();
+	thread_safty_test();
 
 	std::string fen[] = { 
 		"fen 1rbakab1r/9/6n2/p1N4cp/2n1P1pC1/PcP6/1C4P1P/6N2/9/R1BAKAB1R w - - 0 1",
@@ -92,7 +92,6 @@ int main(int argc, char* argv[])
 	vector<string> moves;
 	for (int i = 0; i < 150000; i++)
 	{
-		//moves = cal_move_actions(fen[0]);
 		do_move(fen[0], "b3b9");
 	}
 	auto end = std::chrono::high_resolution_clock::now();
@@ -100,26 +99,26 @@ int main(int argc, char* argv[])
 	std::cout << "Run 15w test, elapsed time: " << elapsed.count() << " microseconds." << std::endl;
 
 
-	//int count_all = 0;
-	//start = std::chrono::high_resolution_clock::now();
-	//for (int i = 0; i < 150000; i++)
-	//{
-	//	ChessBoard cb(fen[i%len]);
-	//	int count = 0;
-	//	while(true)
-	//	{
-	//		count++;
-	//		count_all++;
-	//		auto m = cb.all_legal_moves();
-	//		if (m.size() <= 0 || count >100)
-	//			break;
-	//		cb.do_move(m[0]);
-	//		cb.fen();
-	//	}
-	//}
-	//end = std::chrono::high_resolution_clock::now();
-	//elapsed = end - start;
-	//std::cout << "Run 15w test with "<<count_all<<" moves, elapsed time : " << elapsed.count() << " microseconds."<< std::endl;
+	int count_all = 0;
+	start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < 150000; i++)
+	{
+		ChessBoard cb(fen[i%len]);
+		int count = 0;
+		while(true)
+		{
+			count++;
+			count_all++;
+			auto m = cb.all_legal_moves();
+			if (m.size() <= 0 || count >100)
+				break;
+			cb.do_move(m[0]);
+			cb.fen();
+		}
+	}
+	end = std::chrono::high_resolution_clock::now();
+	elapsed = end - start;
+	std::cout << "Run 15w test with "<<count_all<<" moves, elapsed time : " << elapsed.count() << " microseconds."<< std::endl;
 	system("pause");
 	return 0;
 }
