@@ -7,18 +7,17 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(chess_board, m)
 {
-    m.doc() = "pybind11 chess_board plugin"; 
+    m.doc() = "chess_board module for chinese chess, with this module, you can do chess board operate."; 
 
 	m.def("init_env", &init_env,"Init chinese chess board environment");
 
-	m.def("cal_move_actions", &cal_move_actions,"Given the state of the Chinese "
-	"chess board represented using a FEN string, all possible "
-	"pieces action in the current state are returned");  
+	m.def("all_legal_moves", &all_legal_moves,"give a fen string then "
+	"return all legal move action, if return a empty list and ensure "
+	"the fen is right that means game finished.");  
 
-	m.def("do_move", &do_move,"Given the state of the Chinese chess board represented "
-	"using the FEN string and the movement path of the pawn to calculate the chessboard "
-	"FEN after the pawn moves, the FEN string is returned if the pawn's movement operation "
-	"is a legal operation, otherwise an empty string is returned.");  
+	m.def("do_move", &do_move,"give a fen string and a legal move action,then "
+	"return the FEN of piece moved chess board if move is legal, "
+	"otherwise return a empty string");
 
 	py::class_<ChessBoard>(m, "ChessBoard","Chinese Chess Board, you can instantiate an "
 	    "object to implement operations on a chess board")
@@ -28,5 +27,7 @@ PYBIND11_MODULE(chess_board, m)
         .def("do_move", &ChessBoard::do_move,"Given the move action, if the move action is legal, "
 		"the piece will move on current chess board and return true.")
 		.def("fen", &ChessBoard::fen,"return the FEN string about current chess board")
+		.def("side_to_move", &ChessBoard::side_to_move,"tell you which side to move piece. "
+		"1 means white and -1 means black")
 		.def("flip", &ChessBoard::flip,"flip the current chess board");
 }

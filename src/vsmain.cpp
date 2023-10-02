@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 	vector<string> moves;
 	for (int i = 0; i < 150000; i++)
 	{
-		do_move(fen[0], "b3b9");
+		all_legal_moves(fen[i%len]);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::micro> elapsed = end - start;

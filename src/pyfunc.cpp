@@ -75,7 +75,7 @@ void init_env()
 	Position::init();
 }
 
-vector<string> cal_move_actions(string fen_cmd)
+vector<string> all_legal_moves(string fen_cmd)
 {
 	Position pos;
 	Move m;
@@ -214,4 +214,14 @@ ChessBoard::~ChessBoard()
 		delete (Position*)ppos;
 	if (pstates != nullptr)
 		delete (StateListPtr*)pstates;
+}
+
+int ChessBoard::side_to_move()
+{
+	Color c = ((Position*)ppos)->side_to_move();
+	if(c == BLACK)
+	{
+		return -1;
+	}
+	return 1;
 }
