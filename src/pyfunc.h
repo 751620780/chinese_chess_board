@@ -5,9 +5,6 @@
 
 using namespace std;
 void init_env();
-vector<string> all_legal_moves(string fen_cmd);
-string do_move(string fen_cmd,string move);
-
 
 class ChessBoard
 {

@@ -7,17 +7,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(chess_board, m)
 {
-    m.doc() = "chess_board module for chinese chess, with this module, you can do chess board operate."; 
+    m.doc() = "chess_board module for chinese chess, with this module, you can do chess board operate.";
 
-	m.def("init_env", &init_env,"Init chinese chess board environment");
-
-	m.def("all_legal_moves", &all_legal_moves,"give a fen string then "
-	"return all legal move action, if return a empty list and ensure "
-	"the fen is right that means game finished.");  
-
-	m.def("do_move", &do_move,"give a fen string and a legal move action,then "
-	"return the FEN of piece moved chess board if move is legal, "
-	"otherwise return a empty string");
+	init_env();
 
 	py::class_<ChessBoard>(m, "ChessBoard","Chinese Chess Board, you can instantiate an "
 	    "object to implement operations on a chess board")

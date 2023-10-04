@@ -40,7 +40,6 @@ def work_func(data):
         "r1bakab2/9/1c2c3r/pC2n1p1p/2p6/9/P1P1P1P1P/BN2n1N1B/9/R2AKA1R1 w - - 1 10",
     ]
     fen_len = len(fen_i)
-    cb.init_env()
     for i in range(150000):
         cbo = cb.ChessBoard(fen_i[i % fen_len])
         moves = cbo.all_legal_moves()
