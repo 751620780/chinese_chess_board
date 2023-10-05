@@ -51,6 +51,34 @@ def work_func(data):
 
 
 if __name__ == "__main__":
+    # 支持的中国象棋棋盘状态的FEN格式
+    fen_list = [
+        "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
+        "fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
+        "fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1"
+        "fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1 moves b2b4 h9g7 b0c2",
+        "position fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1 moves b2b4 h9g7 b0c2",
+    ]
+    # 对应FEN状态下的移动棋子方式
+    move_list = ["b2b9","b2b4","b2b9","a6a5","a6a5"]
+    for fen,move in zip(fen_list,move_list):
+        # 提供中国象棋棋盘局面的FEN字符串，创建一个棋盘对象
+        cbo = cb.ChessBoard(fen)
+        # 计算最后的局面
+        print(cbo.fen())
+        # 计算当前局面下所有的合法棋子移动方式，如果返回空的列表表示游戏结束
+        print(cbo.all_legal_moves())
+        # 移动棋子,返回True表示移动棋子成功
+        print(cbo.do_move(move))
+        # 打印移动棋子后的局面FEN
+        print(cbo.fen())
+        # 输出当前轮到谁走子，1表示红方，-1表示黑方
+        print(cbo.side_to_move())
+        # 红黑双方互换棋子
+        cbo.flip()
+        # 打印互换棋子后的局面FEN
+        print(cbo.fen())
+
     mpw = mp_work(10, work_func=work_func)
     data_all = []
     print("start")

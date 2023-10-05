@@ -78,6 +78,11 @@ int main(int argc, char* argv[])
 {
 
 	init_env();
+
+	ChessBoard cb("1n2kab2/1C2a4/4b1n2/2C3pR1/4p4/2p5p/P1P1P1P1P/N3Kr2N/5r3/R1BA1Ac2 w - - 0 3");
+	cb.side_to_move();
+	auto m = cb.all_legal_moves();
+
 	thread_safty_test();
 
 	std::string fen[] = { 
@@ -92,7 +97,8 @@ int main(int argc, char* argv[])
 	vector<string> moves;
 	for (int i = 0; i < 150000; i++)
 	{
-		all_legal_moves(fen[i%len]);
+		ChessBoard cb(fen[i % len]);
+		cb.all_legal_moves();
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::micro> elapsed = end - start;
