@@ -6,6 +6,8 @@
 using namespace std;
 void init_env();
 
+string do_move(string fen_cmd,string move);
+
 class ChessBoard
 {
 public:

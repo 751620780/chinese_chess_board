@@ -10,7 +10,10 @@ PYBIND11_MODULE(chess_board, m)
     m.doc() = "chess_board module for chinese chess, with this module, you can do chess board operate.";
 
 	init_env();
-
+	m.def("do_move", &do_move,"give a fen string and a legal move action,then "
+	"return the FEN of piece moved chess board if move is legal, "
+	"otherwise return a empty string");
+	
 	py::class_<ChessBoard>(m, "ChessBoard","Chinese Chess Board, you can instantiate an "
 	    "object to implement operations on a chess board")
         .def(py::init<const std::string>(),"create a ChessBoard object, requires a FEN string as parameter.")

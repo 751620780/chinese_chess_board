@@ -76,6 +76,46 @@ void init_env()
 }
 
 
+string do_move(string fen_cmd, string move)
+{
+	Position pos;
+	Move m;
+	string token, fen;
+	istringstream is(fen_cmd);
+	StateListPtr states = StateListPtr(new deque<StateInfo>(1));
+
+	is >> token;
+
+	if(token == "position")
+	{
+		is >> token;
+	}
+	
+	if (token == "fen")
+		while (is >> token && token != "moves")
+			fen += token + " ";
+	else
+	{
+		fen = fen_cmd;
+		is.str("");
+	}
+
+	pos.set(fen, &states->back());
+
+	while (is >> token && (m = to_move(pos, token)) != MOVE_NONE)
+	{
+		states->emplace_back();
+		pos.do_move(m, states->back());
+	}
+	if ((m = to_move(pos, move)) != MOVE_NONE)
+	{
+		states->emplace_back();
+		pos.do_move(m, states->back());
+	}
+	
+	return pos.fen();
+}
+
 ChessBoard::ChessBoard(const string &fen_cmd)
 {
 	Move m;
